@@ -63,6 +63,7 @@ export interface SystemStatus {
   status: string;
   environment: string;
   persistenceType: string;
+  isPostgresActive?: boolean;
   storagePath: string;
   stats: {
     totalInquiries: number;

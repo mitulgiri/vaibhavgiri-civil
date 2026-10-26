@@ -1,14 +1,20 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express, { Request, Response, NextFunction } from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
+import pg from 'pg';
+
+const { Pool } = pg;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Data store setup
+// Data store setup for file backup
 const DATA_DIR = path.resolve(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'store.json');
 
@@ -294,7 +300,7 @@ const DEFAULT_DATA: DatabaseSchema = {
   adminTokens: []
 };
 
-// Database helper functions with atomic write
+// Database helper functions with atomic write for fallback
 function readDb(): DatabaseSchema {
   try {
     if (!fs.existsSync(DATA_FILE)) {
@@ -311,19 +317,158 @@ function readDb(): DatabaseSchema {
       adminTokens: parsed.adminTokens || []
     };
   } catch (err) {
-    console.error('Error reading database file, using fallback defaults:', err);
+    console.error('Error reading fallback file store, using defaults:', err);
     return DEFAULT_DATA;
   }
 }
 
 function writeDb(data: DatabaseSchema): void {
-  const tempPath = `${DATA_FILE}.tmp`;
-  fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8');
-  fs.renameSync(tempPath, DATA_FILE);
+  try {
+    const tempPath = `${DATA_FILE}.tmp`;
+    fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8');
+    fs.renameSync(tempPath, DATA_FILE);
+  } catch (err) {
+    console.error('Error writing fallback file store:', err);
+  }
 }
 
-// Ensure database is initialized
+// Initialize file store
 readDb();
+
+// Setup PostgreSQL pool if DATABASE_URL is configured
+let pgPool: pg.Pool | null = null;
+let isPgConnected = false;
+
+if (process.env.DATABASE_URL && process.env.DATABASE_URL.trim() !== '') {
+  try {
+    pgPool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 5000,
+      max: 10,
+    });
+  } catch (err) {
+    console.error('[Database] Failed to initialize PostgreSQL pool:', (err as Error).message);
+  }
+}
+
+// Function to initialize tables and seed data if empty
+async function initPostgresDatabase() {
+  if (!pgPool) return;
+
+  try {
+    const client = await pgPool.connect();
+    try {
+      // Create tables safely if not already present
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS inquiries (
+            id VARCHAR(64) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            mobile VARCHAR(32) NOT NULL,
+            email VARCHAR(255),
+            service_id VARCHAR(128) NOT NULL,
+            service_name VARCHAR(255) NOT NULL,
+            project_type VARCHAR(128) NOT NULL,
+            location VARCHAR(255) NOT NULL,
+            estimated_budget VARCHAR(128),
+            description TEXT NOT NULL,
+            status VARCHAR(32) DEFAULT 'New',
+            admin_notes TEXT,
+            ip_address VARCHAR(64),
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_inquiries_status ON inquiries(status);
+        CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries(created_at DESC);
+
+        CREATE TABLE IF NOT EXISTS services (
+            id VARCHAR(64) PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            description TEXT NOT NULL,
+            points JSONB DEFAULT '[]'::jsonb,
+            category VARCHAR(64) NOT NULL,
+            icon_name VARCHAR(64) NOT NULL,
+            display_order INT DEFAULT 0,
+            featured BOOLEAN DEFAULT true,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS projects (
+            id VARCHAR(64) PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            category VARCHAR(64) NOT NULL,
+            sector_name VARCHAR(128) NOT NULL,
+            description TEXT NOT NULL,
+            features JSONB DEFAULT '[]'::jsonb,
+            image_url TEXT NOT NULL,
+            is_sample BOOLEAN DEFAULT true,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS company_info (
+            id INT PRIMARY KEY DEFAULT 1,
+            business_name VARCHAR(255) NOT NULL,
+            tagline VARCHAR(255) NOT NULL,
+            founder VARCHAR(255) NOT NULL,
+            phone VARCHAR(32) NOT NULL,
+            whatsapp VARCHAR(32) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            address TEXT NOT NULL,
+            working_hours VARCHAR(255) NOT NULL,
+            consultation_fee_notice TEXT,
+            announcement TEXT,
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // Seed company_info if empty
+      const compRes = await client.query('SELECT COUNT(*) FROM company_info');
+      if (parseInt(compRes.rows[0].count, 10) === 0) {
+        const c = DEFAULT_DATA.company;
+        await client.query(`
+          INSERT INTO company_info (id, business_name, tagline, founder, phone, whatsapp, email, address, working_hours, consultation_fee_notice, announcement)
+          VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          ON CONFLICT (id) DO NOTHING
+        `, [c.businessName, c.tagline, c.founder, c.phone, c.whatsapp, c.email, c.address, c.workingHours, c.consultationFeeNotice, c.announcement]);
+      }
+
+      // Seed services if empty
+      const srvRes = await client.query('SELECT COUNT(*) FROM services');
+      if (parseInt(srvRes.rows[0].count, 10) === 0) {
+        for (const s of DEFAULT_DATA.services) {
+          await client.query(`
+            INSERT INTO services (id, title, description, points, category, icon_name, display_order, featured)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            ON CONFLICT (id) DO NOTHING
+          `, [s.id, s.title, s.description, JSON.stringify(s.points), s.category, s.iconName, s.order, s.featured]);
+        }
+      }
+
+      // Seed projects if empty
+      const projRes = await client.query('SELECT COUNT(*) FROM projects');
+      if (parseInt(projRes.rows[0].count, 10) === 0) {
+        for (const p of DEFAULT_DATA.projects) {
+          await client.query(`
+            INSERT INTO projects (id, title, category, sector_name, description, features, image_url, is_sample)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            ON CONFLICT (id) DO NOTHING
+          `, [p.id, p.title, p.category, p.sectorName, p.description, JSON.stringify(p.features), p.imageUrl, p.isSample]);
+        }
+      }
+
+      isPgConnected = true;
+      console.log('[Database] PostgreSQL connection verified and schema operational.');
+    } finally {
+      client.release();
+    }
+  } catch (err) {
+    console.error('[Database] PostgreSQL initialization warning:', (err as Error).message);
+    isPgConnected = false;
+  }
+}
+
+// In-memory admin session tokens (never exposed to browser)
+const activeAdminTokens = new Set<string>();
 
 // Admin Authentication Configuration
 // Default pass is admin@vga2026. Can be overridden via ADMIN_PASSWORD environment variable
@@ -337,13 +482,16 @@ function requireAdminAuth(req: Request, res: Response, next: NextFunction) {
 
   const token = authHeader.split(' ')[1];
   const db = readDb();
-  if (!db.adminTokens.includes(token)) {
+  if (!activeAdminTokens.has(token) && !db.adminTokens.includes(token)) {
     return res.status(401).json({ error: 'Session expired or invalid. Please log in again.' });
   }
   next();
 }
 
 async function startServer() {
+  // Initialize PostgreSQL schema if configured
+  await initPostgresDatabase();
+
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
 
@@ -363,26 +511,88 @@ async function startServer() {
   // --- PUBLIC API ROUTES ---
 
   // 1. Get Company Info
-  app.get('/api/company', (req: Request, res: Response) => {
+  app.get('/api/company', async (req: Request, res: Response) => {
+    if (isPgConnected && pgPool) {
+      try {
+        const result = await pgPool.query('SELECT * FROM company_info WHERE id = 1');
+        if (result.rows.length > 0) {
+          const r = result.rows[0];
+          return res.json({
+            businessName: r.business_name,
+            tagline: r.tagline,
+            founder: r.founder,
+            phone: r.phone,
+            whatsapp: r.whatsapp,
+            email: r.email,
+            address: r.address,
+            workingHours: r.working_hours,
+            consultationFeeNotice: r.consultation_fee_notice,
+            announcement: r.announcement,
+          });
+        }
+      } catch (err) {
+        console.error('Error querying company from PG, falling back to file store');
+      }
+    }
     const db = readDb();
     res.json(db.company);
   });
 
   // 2. Get Services
-  app.get('/api/services', (req: Request, res: Response) => {
+  app.get('/api/services', async (req: Request, res: Response) => {
+    if (isPgConnected && pgPool) {
+      try {
+        const result = await pgPool.query('SELECT * FROM services ORDER BY display_order ASC');
+        if (result.rows.length > 0) {
+          const services: ServiceItem[] = result.rows.map(r => ({
+            id: r.id,
+            title: r.title,
+            description: r.description,
+            points: typeof r.points === 'string' ? JSON.parse(r.points) : (r.points || []),
+            category: r.category,
+            iconName: r.icon_name,
+            order: r.display_order,
+            featured: r.featured
+          }));
+          return res.json(services);
+        }
+      } catch (err) {
+        console.error('Error querying services from PG, falling back to file store');
+      }
+    }
     const db = readDb();
     const sorted = [...db.services].sort((a, b) => a.order - b.order);
     res.json(sorted);
   });
 
   // 3. Get Project Categories & Sample Projects
-  app.get('/api/projects', (req: Request, res: Response) => {
+  app.get('/api/projects', async (req: Request, res: Response) => {
+    if (isPgConnected && pgPool) {
+      try {
+        const result = await pgPool.query('SELECT * FROM projects ORDER BY created_at ASC');
+        if (result.rows.length > 0) {
+          const projects: ProjectItem[] = result.rows.map(r => ({
+            id: r.id,
+            title: r.title,
+            category: r.category,
+            sectorName: r.sector_name,
+            description: r.description,
+            features: typeof r.features === 'string' ? JSON.parse(r.features) : (r.features || []),
+            imageUrl: r.image_url,
+            isSample: r.is_sample
+          }));
+          return res.json(projects);
+        }
+      } catch (err) {
+        console.error('Error querying projects from PG, falling back to file store');
+      }
+    }
     const db = readDb();
     res.json(db.projects);
   });
 
   // 4. Submit Customer Inquiry with Validation & Spam Controls
-  app.post('/api/inquiries', (req: Request, res: Response) => {
+  app.post('/api/inquiries', async (req: Request, res: Response) => {
     const {
       name,
       mobile,
@@ -429,9 +639,12 @@ async function startServer() {
       return res.status(400).json({ error: 'Please provide a brief description of your project requirements (minimum 10 characters).' });
     }
 
-    const db = readDb();
+    const inquiryId = `inq-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+    const createdAt = new Date().toISOString();
+    const cleanIp = clientIp.replace(/^.*:/, '');
+
     const newInquiry: InquiryItem = {
-      id: `inq-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`,
+      id: inquiryId,
       name: name.trim(),
       mobile: mobile.trim(),
       email: email ? email.trim() : '',
@@ -442,10 +655,39 @@ async function startServer() {
       estimatedBudget: estimatedBudget ? estimatedBudget.trim() : '',
       description: description.trim(),
       status: 'New',
-      createdAt: new Date().toISOString(),
-      ipAddress: clientIp.replace(/^.*:/, '') // Clean IPv6/IPv4 prefix
+      createdAt,
+      ipAddress: cleanIp
     };
 
+    // Save to PostgreSQL if connected
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query(`
+          INSERT INTO inquiries (
+            id, name, mobile, email, service_id, service_name, project_type, location, estimated_budget, description, status, ip_address, created_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        `, [
+          newInquiry.id,
+          newInquiry.name,
+          newInquiry.mobile,
+          newInquiry.email,
+          newInquiry.serviceId,
+          newInquiry.serviceName,
+          newInquiry.projectType,
+          newInquiry.location,
+          newInquiry.estimatedBudget,
+          newInquiry.description,
+          newInquiry.status,
+          newInquiry.ipAddress,
+          newInquiry.createdAt
+        ]);
+      } catch (err) {
+        console.error('Error inserting inquiry into PostgreSQL, fallback to store:', (err as Error).message);
+      }
+    }
+
+    // Also write to file store for resilience
+    const db = readDb();
     db.inquiries.unshift(newInquiry);
     writeDb(db);
 
@@ -457,17 +699,25 @@ async function startServer() {
   });
 
   // --- ADMIN AUTHENTICATION ---
+  // Server-side authentication: ADMIN_PASSWORD is verified only on the server, never sent to the client.
 
   app.post('/api/admin/login', (req: Request, res: Response) => {
     const { password } = req.body;
-    if (!password || password !== ADMIN_PASSWORD) {
+    if (!password || typeof password !== 'string') {
+      return res.status(401).json({ error: 'Password is required. Access denied.' });
+    }
+
+    // Timing-safe or strict comparison
+    const isPasswordMatch = password === ADMIN_PASSWORD;
+    if (!isPasswordMatch) {
       return res.status(401).json({ error: 'Invalid administrator credentials. Access denied.' });
     }
 
     const token = crypto.randomBytes(32).toString('hex');
+    activeAdminTokens.add(token);
+
     const db = readDb();
     db.adminTokens.push(token);
-    // Keep max 20 active tokens
     if (db.adminTokens.length > 20) {
       db.adminTokens = db.adminTokens.slice(-20);
     }
@@ -488,6 +738,7 @@ async function startServer() {
     const authHeader = req.headers.authorization;
     const token = authHeader?.split(' ')[1];
     if (token) {
+      activeAdminTokens.delete(token);
       const db = readDb();
       db.adminTokens = db.adminTokens.filter(t => t !== token);
       writeDb(db);
@@ -498,32 +749,75 @@ async function startServer() {
   // --- ADMIN PROTECTED MANAGEMENT ENDPOINTS ---
 
   // Get Inquiries
-  app.get('/api/admin/inquiries', requireAdminAuth, (req: Request, res: Response) => {
+  app.get('/api/admin/inquiries', requireAdminAuth, async (req: Request, res: Response) => {
+    if (isPgConnected && pgPool) {
+      try {
+        const result = await pgPool.query(`
+          SELECT 
+            id, name, mobile, email, 
+            service_id as "serviceId", 
+            service_name as "serviceName", 
+            project_type as "projectType", 
+            location, 
+            estimated_budget as "estimatedBudget", 
+            description, 
+            status, 
+            admin_notes as "adminNotes", 
+            created_at as "createdAt", 
+            ip_address as "ipAddress"
+          FROM inquiries 
+          ORDER BY created_at DESC
+        `);
+        return res.json(result.rows);
+      } catch (err) {
+        console.error('Error fetching inquiries from PG, falling back to file store');
+      }
+    }
     const db = readDb();
     res.json(db.inquiries);
   });
 
   // Update Inquiry Status & Notes
-  app.patch('/api/admin/inquiries/:id', requireAdminAuth, (req: Request, res: Response) => {
+  app.patch('/api/admin/inquiries/:id', requireAdminAuth, async (req: Request, res: Response) => {
     const { id } = req.params;
     const { status, adminNotes } = req.body;
-    const db = readDb();
-    const index = db.inquiries.findIndex(i => i.id === id);
 
-    if (index === -1) {
-      return res.status(404).json({ error: 'Inquiry not found.' });
+    if (isPgConnected && pgPool) {
+      try {
+        if (status && adminNotes !== undefined) {
+          await pgPool.query('UPDATE inquiries SET status = $1, admin_notes = $2 WHERE id = $3', [status, adminNotes, id]);
+        } else if (status) {
+          await pgPool.query('UPDATE inquiries SET status = $1 WHERE id = $2', [status, id]);
+        } else if (adminNotes !== undefined) {
+          await pgPool.query('UPDATE inquiries SET admin_notes = $1 WHERE id = $2', [adminNotes, id]);
+        }
+      } catch (err) {
+        console.error('Error updating inquiry in PG:', err);
+      }
     }
 
-    if (status) db.inquiries[index].status = status;
-    if (adminNotes !== undefined) db.inquiries[index].adminNotes = adminNotes;
+    const db = readDb();
+    const index = db.inquiries.findIndex(i => i.id === id);
+    if (index !== -1) {
+      if (status) db.inquiries[index].status = status;
+      if (adminNotes !== undefined) db.inquiries[index].adminNotes = adminNotes;
+      writeDb(db);
+      return res.json({ success: true, inquiry: db.inquiries[index] });
+    }
 
-    writeDb(db);
-    res.json({ success: true, inquiry: db.inquiries[index] });
+    res.json({ success: true, message: 'Inquiry updated' });
   });
 
   // Delete Inquiry
-  app.delete('/api/admin/inquiries/:id', requireAdminAuth, (req: Request, res: Response) => {
+  app.delete('/api/admin/inquiries/:id', requireAdminAuth, async (req: Request, res: Response) => {
     const { id } = req.params;
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query('DELETE FROM inquiries WHERE id = $1', [id]);
+      } catch (err) {
+        console.error('Error deleting inquiry in PG:', err);
+      }
+    }
     const db = readDb();
     db.inquiries = db.inquiries.filter(i => i.id !== id);
     writeDb(db);
@@ -531,13 +825,37 @@ async function startServer() {
   });
 
   // Export Inquiries as CSV
-  app.get('/api/admin/export-inquiries', requireAdminAuth, (req: Request, res: Response) => {
-    const db = readDb();
+  app.get('/api/admin/export-inquiries', requireAdminAuth, async (req: Request, res: Response) => {
+    let inquiriesList: InquiryItem[] = [];
+    if (isPgConnected && pgPool) {
+      try {
+        const result = await pgPool.query(`
+          SELECT 
+            id, name, mobile, email, 
+            service_id as "serviceId", 
+            service_name as "serviceName", 
+            project_type as "projectType", 
+            location, 
+            estimated_budget as "estimatedBudget", 
+            description, 
+            status, 
+            admin_notes as "adminNotes", 
+            created_at as "createdAt"
+          FROM inquiries 
+          ORDER BY created_at DESC
+        `);
+        inquiriesList = result.rows;
+      } catch {
+        inquiriesList = readDb().inquiries;
+      }
+    } else {
+      inquiriesList = readDb().inquiries;
+    }
+
     const headers = ['ID', 'Date', 'Status', 'Name', 'Mobile', 'Email', 'Service', 'Project Type', 'Location', 'Estimated Budget', 'Description', 'Notes'];
-    
     const escapeCsv = (val: any) => `"${String(val ?? '').replace(/"/g, '""')}"`;
     
-    const rows = db.inquiries.map(i => [
+    const rows = inquiriesList.map(i => [
       i.id,
       new Date(i.createdAt).toLocaleDateString(),
       i.status,
@@ -559,16 +877,41 @@ async function startServer() {
   });
 
   // Update Company Info
-  app.put('/api/admin/company', requireAdminAuth, (req: Request, res: Response) => {
+  app.put('/api/admin/company', requireAdminAuth, async (req: Request, res: Response) => {
+    const updated = req.body;
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query(`
+          UPDATE company_info SET
+            business_name = COALESCE($1, business_name),
+            tagline = COALESCE($2, tagline),
+            founder = COALESCE($3, founder),
+            phone = COALESCE($4, phone),
+            whatsapp = COALESCE($5, whatsapp),
+            email = COALESCE($6, email),
+            address = COALESCE($7, address),
+            working_hours = COALESCE($8, working_hours),
+            consultation_fee_notice = COALESCE($9, consultation_fee_notice),
+            announcement = COALESCE($10, announcement),
+            updated_at = NOW()
+          WHERE id = 1
+        `, [
+          updated.businessName, updated.tagline, updated.founder, updated.phone,
+          updated.whatsapp, updated.email, updated.address, updated.workingHours,
+          updated.consultationFeeNotice, updated.announcement
+        ]);
+      } catch (err) {
+        console.error('Error updating company info in PG:', err);
+      }
+    }
     const db = readDb();
-    db.company = { ...db.company, ...req.body };
+    db.company = { ...db.company, ...updated };
     writeDb(db);
     res.json({ success: true, company: db.company });
   });
 
   // Manage Services (Create, Update, Delete)
-  app.post('/api/admin/services', requireAdminAuth, (req: Request, res: Response) => {
-    const db = readDb();
+  app.post('/api/admin/services', requireAdminAuth, async (req: Request, res: Response) => {
     const newService: ServiceItem = {
       id: req.body.id || `srv-${Date.now()}`,
       title: req.body.title || 'New Engineering Service',
@@ -576,28 +919,76 @@ async function startServer() {
       points: Array.isArray(req.body.points) ? req.body.points : [],
       category: req.body.category || 'Consultancy',
       iconName: req.body.iconName || 'Building2',
-      order: db.services.length + 1,
+      order: req.body.order || 99,
       featured: Boolean(req.body.featured)
     };
+
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query(`
+          INSERT INTO services (id, title, description, points, category, icon_name, display_order, featured)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `, [
+          newService.id, newService.title, newService.description,
+          JSON.stringify(newService.points), newService.category,
+          newService.iconName, newService.order, newService.featured
+        ]);
+      } catch (err) {
+        console.error('Error inserting service into PG:', err);
+      }
+    }
+
+    const db = readDb();
     db.services.push(newService);
     writeDb(db);
     res.status(201).json({ success: true, service: newService });
   });
 
-  app.put('/api/admin/services/:id', requireAdminAuth, (req: Request, res: Response) => {
+  app.put('/api/admin/services/:id', requireAdminAuth, async (req: Request, res: Response) => {
     const { id } = req.params;
+    const body = req.body;
+
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query(`
+          UPDATE services SET
+            title = COALESCE($1, title),
+            description = COALESCE($2, description),
+            points = COALESCE($3, points),
+            category = COALESCE($4, category),
+            icon_name = COALESCE($5, icon_name),
+            display_order = COALESCE($6, display_order),
+            featured = COALESCE($7, featured)
+          WHERE id = $8
+        `, [
+          body.title, body.description,
+          body.points ? JSON.stringify(body.points) : null,
+          body.category, body.iconName, body.order, body.featured, id
+        ]);
+      } catch (err) {
+        console.error('Error updating service in PG:', err);
+      }
+    }
+
     const db = readDb();
     const index = db.services.findIndex(s => s.id === id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'Service not found.' });
+    if (index !== -1) {
+      db.services[index] = { ...db.services[index], ...body, id };
+      writeDb(db);
+      return res.json({ success: true, service: db.services[index] });
     }
-    db.services[index] = { ...db.services[index], ...req.body, id };
-    writeDb(db);
-    res.json({ success: true, service: db.services[index] });
+    res.json({ success: true });
   });
 
-  app.delete('/api/admin/services/:id', requireAdminAuth, (req: Request, res: Response) => {
+  app.delete('/api/admin/services/:id', requireAdminAuth, async (req: Request, res: Response) => {
     const { id } = req.params;
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query('DELETE FROM services WHERE id = $1', [id]);
+      } catch (err) {
+        console.error('Error deleting service from PG:', err);
+      }
+    }
     const db = readDb();
     db.services = db.services.filter(s => s.id !== id);
     writeDb(db);
@@ -605,8 +996,7 @@ async function startServer() {
   });
 
   // Manage Projects
-  app.post('/api/admin/projects', requireAdminAuth, (req: Request, res: Response) => {
-    const db = readDb();
+  app.post('/api/admin/projects', requireAdminAuth, async (req: Request, res: Response) => {
     const newProj: ProjectItem = {
       id: req.body.id || `proj-${Date.now()}`,
       title: req.body.title,
@@ -617,41 +1007,99 @@ async function startServer() {
       imageUrl: req.body.imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb186f5f7?auto=format&fit=crop&w=1200&q=80',
       isSample: req.body.isSample !== undefined ? Boolean(req.body.isSample) : true
     };
+
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query(`
+          INSERT INTO projects (id, title, category, sector_name, description, features, image_url, is_sample)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `, [
+          newProj.id, newProj.title, newProj.category, newProj.sectorName,
+          newProj.description, JSON.stringify(newProj.features), newProj.imageUrl, newProj.isSample
+        ]);
+      } catch (err) {
+        console.error('Error inserting project into PG:', err);
+      }
+    }
+
+    const db = readDb();
     db.projects.push(newProj);
     writeDb(db);
     res.status(201).json({ success: true, project: newProj });
   });
 
-  app.put('/api/admin/projects/:id', requireAdminAuth, (req: Request, res: Response) => {
+  app.put('/api/admin/projects/:id', requireAdminAuth, async (req: Request, res: Response) => {
     const { id } = req.params;
+    const body = req.body;
+
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query(`
+          UPDATE projects SET
+            title = COALESCE($1, title),
+            category = COALESCE($2, category),
+            sector_name = COALESCE($3, sector_name),
+            description = COALESCE($4, description),
+            features = COALESCE($5, features),
+            image_url = COALESCE($6, image_url),
+            is_sample = COALESCE($7, is_sample)
+          WHERE id = $8
+        `, [
+          body.title, body.category, body.sectorName, body.description,
+          body.features ? JSON.stringify(body.features) : null,
+          body.imageUrl, body.isSample, id
+        ]);
+      } catch (err) {
+        console.error('Error updating project in PG:', err);
+      }
+    }
+
     const db = readDb();
     const index = db.projects.findIndex(p => p.id === id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'Project not found.' });
+    if (index !== -1) {
+      db.projects[index] = { ...db.projects[index], ...body, id };
+      writeDb(db);
+      return res.json({ success: true, project: db.projects[index] });
     }
-    db.projects[index] = { ...db.projects[index], ...req.body, id };
-    writeDb(db);
-    res.json({ success: true, project: db.projects[index] });
+    res.json({ success: true });
   });
 
-  app.delete('/api/admin/projects/:id', requireAdminAuth, (req: Request, res: Response) => {
+  app.delete('/api/admin/projects/:id', requireAdminAuth, async (req: Request, res: Response) => {
     const { id } = req.params;
+    if (isPgConnected && pgPool) {
+      try {
+        await pgPool.query('DELETE FROM projects WHERE id = $1', [id]);
+      } catch (err) {
+        console.error('Error deleting project in PG:', err);
+      }
+    }
     const db = readDb();
     db.projects = db.projects.filter(p => p.id !== id);
     writeDb(db);
     res.json({ success: true, message: 'Project removed.' });
   });
 
-  // System status & database diagnosis
-  app.get('/api/system-status', (req: Request, res: Response) => {
+  // System status & database diagnosis (Safe output - NEVER exposes credentials)
+  app.get('/api/system-status', async (req: Request, res: Response) => {
+    let pgInquiryCount = 0;
+    if (isPgConnected && pgPool) {
+      try {
+        const c = await pgPool.query('SELECT COUNT(*) FROM inquiries');
+        pgInquiryCount = parseInt(c.rows[0].count, 10);
+      } catch {
+        pgInquiryCount = 0;
+      }
+    }
+
     const db = readDb();
     res.json({
       status: 'operational',
       environment: process.env.NODE_ENV || 'development',
-      persistenceType: 'Local JSON Document Store (ACID atomic write with tmp rename)',
-      storagePath: DATA_FILE,
+      persistenceType: isPgConnected ? 'PostgreSQL (Active & Verified)' : 'Local JSON Store (ACID atomic write)',
+      isPostgresActive: isPgConnected,
+      storagePath: isPgConnected ? 'PostgreSQL Database' : DATA_FILE,
       stats: {
-        totalInquiries: db.inquiries.length,
+        totalInquiries: isPgConnected ? pgInquiryCount : db.inquiries.length,
         totalServices: db.services.length,
         totalProjects: db.projects.length,
         companyConfigured: Boolean(db.company.businessName),

@@ -1,0 +1,293 @@
+{
+  "company": {
+    "businessName": "Vaibhavgiri Goswami & Associates",
+    "tagline": "Civil Engineering Consultants",
+    "founder": "Vaibhavgiri Goswami",
+    "phone": "+91 9427409949",
+    "whatsapp": "+91 9427409949",
+    "email": "contact@vaibhavgirigoswami.com",
+    "address": "Office address to be confirmed. (Serving regional & municipal development projects)",
+    "workingHours": "Monday – Saturday: 9:30 AM to 7:00 PM (IST)",
+    "consultationFeeNotice": "Preliminary technical discussions and initial requirement briefings are scheduled by appointment.",
+    "announcement": "Accepting inquiries for RCC structural design coordination, site supervision, and turnkey construction management."
+  },
+  "services": [
+    {
+      "id": "civil-engineering-consultancy",
+      "title": "Civil Engineering Consultancy",
+      "description": "Comprehensive engineering consultation ensuring regulatory compliance, structural integrity, and architectural viability.",
+      "points": [
+        "Building planning & layout optimization",
+        "Structural design coordination with licensed structural engineers",
+        "Technical consultation on soil, foundation & load parameters"
+      ],
+      "category": "Consultancy",
+      "iconName": "Building2",
+      "order": 1,
+      "featured": true
+    },
+    {
+      "id": "site-supervision-project-management",
+      "title": "Site Supervision & Project Management",
+      "description": "End-to-end on-site engineering oversight ensuring strict adherence to approved drawings, timelines, and safety norms.",
+      "points": [
+        "Rigorous site inspections at critical milestones",
+        "Construction progress monitoring & schedule tracking",
+        "Comprehensive quality control and workmanship verification",
+        "Labor management coordination & productivity monitoring"
+      ],
+      "category": "Management",
+      "iconName": "ClipboardCheck",
+      "order": 2,
+      "featured": true
+    },
+    {
+      "id": "construction-services",
+      "title": "Construction Services",
+      "description": "End-to-end building execution delivering durable, aesthetically sound, and high-performance civil structures.",
+      "points": [
+        "Residential construction (individual homes & villas)",
+        "Commercial construction & retail complexes",
+        "Industrial shed & warehouse construction",
+        "Bungalow and multi-unit apartment projects"
+      ],
+      "category": "Construction",
+      "iconName": "Hammer",
+      "order": 3,
+      "featured": true
+    },
+    {
+      "id": "labour-contract-services",
+      "title": "Labour Contract Services",
+      "description": "Skilled workforce deployment under engineering supervision for structural masonry and finishing trades.",
+      "points": [
+        "RCC (Reinforced Cement Concrete) framework & bar-bending",
+        "Brickwork and precision masonry",
+        "Internal and external plastering work",
+        "Flooring, tile setting & granite installation",
+        "Advanced chemical waterproofing systems",
+        "Interior and exterior painting and finishing work"
+      ],
+      "category": "Contracting",
+      "iconName": "Users",
+      "order": 4,
+      "featured": true
+    },
+    {
+      "id": "turnkey-projects",
+      "title": "Turnkey Projects",
+      "description": "Hassle-free single-point accountability covering everything from foundation conception to final keys handover.",
+      "points": [
+        "End-to-end coordinated project execution",
+        "Integrated architectural planning & material procurement",
+        "Timeline-bound milestone delivery",
+        "Final commissioning and formal project handover according to agreed scope"
+      ],
+      "category": "Turnkey",
+      "iconName": "CheckCircle2",
+      "order": 5,
+      "featured": true
+    },
+    {
+      "id": "renovation-and-repair",
+      "title": "Renovation and Repair Work",
+      "description": "Engineering-guided restoration, retrofitting, and structural enhancements for aging or modified properties.",
+      "points": [
+        "Full building renovation & spatial modernization",
+        "Routine and preventive repair and maintenance",
+        "Structural and non-structural repair solutions as appropriate to project scope",
+        "Crack repairs, dampness treatment & load-bearing enhancements"
+      ],
+      "category": "Restoration",
+      "iconName": "Wrench",
+      "order": 6,
+      "featured": false
+    },
+    {
+      "id": "estimation-boq-billing",
+      "title": "Estimation, BOQ & Billing Verification",
+      "description": "Meticulous financial engineering to safeguard your capital, avoid cost overruns, and verify contractor claims.",
+      "points": [
+        "Precise construction cost estimation and rate analysis",
+        "Detailed Bill of Quantities (BOQ) preparation",
+        "Independent contractor billing verification & measurement checks",
+        "Material quantity takeoff and inventory reconciliation"
+      ],
+      "category": "Estimation",
+      "iconName": "Calculator",
+      "order": 7,
+      "featured": false
+    },
+    {
+      "id": "quality-control-technical-support",
+      "title": "Quality Control & Technical Support",
+      "description": "Scientific material inspection and on-site testing guidance to ensure long-term structural longevity.",
+      "points": [
+        "Concrete slump, cube test, and steel tensile verification guidance",
+        "Continuous workmanship monitoring against IS/IRC standards",
+        "Technical guidance on modern waterproofing and chemical admixtures",
+        "Dedicated engineering support for resolving on-site structural challenges"
+      ],
+      "category": "Technical",
+      "iconName": "ShieldCheck",
+      "order": 8,
+      "featured": false
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-res-1",
+      "title": "Contemporary Residential Villa Planning & Supervision",
+      "category": "residential",
+      "sectorName": "Residential Buildings",
+      "description": "Structural coordination, RCC framework supervision, and turnkey execution management for modern residential architecture.",
+      "features": [
+        "Earthquake-resistant RCC design coordination",
+        "Vastu-compliant spatial planning",
+        "Engineered thermal insulation & waterproofing"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "isSample": true
+    },
+    {
+      "id": "proj-com-1",
+      "title": "Commercial Complex & Retail Arcade",
+      "category": "commercial",
+      "sectorName": "Commercial Buildings",
+      "description": "High-clearance column layouts, durable multi-level slab casting, and fire-safe commercial infrastructure coordination.",
+      "features": [
+        "High-load commercial slab design",
+        "Dedicated basement parking drainage",
+        "Energy-efficient facade structural anchoring"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+      "isSample": true
+    },
+    {
+      "id": "proj-ind-1",
+      "title": "Industrial Manufacturing Shed & Warehouse",
+      "category": "industrial",
+      "sectorName": "Industrial Buildings",
+      "description": "Heavy industrial flooring, PEB steel frame foundations, crane gantry support, and industrial drainage systems.",
+      "features": [
+        "VDF (Vacuum Dewatered) heavy-duty flooring",
+        "Heavy machinery foundation design",
+        "Robust rainwater runoff channeling"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
+      "isSample": true
+    },
+    {
+      "id": "proj-edu-1",
+      "title": "Educational Campus & Institutional Wing",
+      "category": "educational",
+      "sectorName": "Educational Institutions",
+      "description": "Acoustically sound lecture halls, well-ventilated laboratory wings, and safe emergency exit circulation routes.",
+      "features": [
+        "Wide span beam layouts",
+        "Child safety barrier standards",
+        "Rapid-turnaround monsoon-proof execution"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=80",
+      "isSample": true
+    },
+    {
+      "id": "proj-med-1",
+      "title": "Healthcare Center & Specialized Clinic Facility",
+      "category": "healthcare",
+      "sectorName": "Hospitals & Healthcare Facilities",
+      "description": "Cleanroom HVAC structural pass-throughs, medical equipment foundation isolation, and anti-microbial finishing coordination.",
+      "features": [
+        "Heavy medical diagnostic equipment slabs",
+        "Vibration isolation details",
+        "Hygienic epoxy coving and sterile finishes"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&w=1200&q=80",
+      "isSample": true
+    },
+    {
+      "id": "proj-bun-1",
+      "title": "Luxury Bungalows & Multi-Unit Apartments",
+      "category": "bungalows",
+      "sectorName": "Bungalows & Apartments",
+      "description": "Exquisite aesthetic concrete finishes, private terrace waterproofing, and premium structural craftsmanship.",
+      "features": [
+        "Double-height living room slab casting",
+        "Concealed beam plumbing routing",
+        "Designer exterior texture & stone cladding"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "isSample": true
+    }
+  ],
+  "inquiries": [
+    {
+      "id": "inq-mvp3e266-wfaw",
+      "name": "Pre-Launch Verification Client",
+      "mobile": "9427409949",
+      "email": "audit.test@example.com",
+      "serviceId": "site-supervision-project-management",
+      "serviceName": "Site Supervision & Project Management",
+      "projectType": "Commercial Complex",
+      "location": "Ahmedabad, Gujarat",
+      "estimatedBudget": "₹1 Crore - ₹3 Crores",
+      "description": "Pre-launch audit inquiry testing direct insertion into Supabase PostgreSQL database.",
+      "status": "New",
+      "createdAt": "2026-10-26T10:06:51.774Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "inq-mvp3drza-y5v6",
+      "name": "Pre-Launch Verification Client",
+      "mobile": "9427409949",
+      "email": "audit.test@example.com",
+      "serviceId": "site-supervision-project-management",
+      "serviceName": "Site Supervision & Project Management",
+      "projectType": "Commercial Complex",
+      "location": "Ahmedabad, Gujarat",
+      "estimatedBudget": "₹1 Crore - ₹3 Crores",
+      "description": "Pre-launch audit inquiry testing direct insertion into Supabase PostgreSQL database.",
+      "status": "New",
+      "createdAt": "2026-10-26T10:06:38.566Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "inq-mvp34w48-2ydl",
+      "name": "Rajesh Vaghela",
+      "mobile": "9427401234",
+      "email": "rajesh.vaghela@example.com",
+      "serviceId": "civil-engineering-consultancy",
+      "serviceName": "Civil Engineering Consultancy",
+      "projectType": "Bungalows & Apartments",
+      "location": "Gandhinagar, Gujarat",
+      "estimatedBudget": "₹50 Lakhs - ₹1 Crore",
+      "description": "Require structural design coordination, soil load analysis, and RCC supervision for a G+2 private bungalow.",
+      "status": "New",
+      "createdAt": "2026-10-26T09:59:44.024Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "inq-seed-01",
+      "name": "Ramesh Patel",
+      "mobile": "+91 98250 12345",
+      "email": "ramesh.patel.sample@example.com",
+      "serviceId": "civil-engineering-consultancy",
+      "serviceName": "Civil Engineering Consultancy",
+      "projectType": "Bungalows & Apartments",
+      "location": "Ahmedabad / Gandhinagar Region",
+      "estimatedBudget": "₹40 - 60 Lakhs",
+      "description": "Looking for technical consultation, architectural layout review, and structural coordination for a G+2 residential bungalow.",
+      "status": "In Review",
+      "adminNotes": "Initial contact made. Requested structural CAD drawings.",
+      "createdAt": "2026-10-24T07:14:08.573Z"
+    }
+  ],
+  "adminTokens": [
+    "1114a00349b6bfdd15c98ff8c0241c3282dc29bbc181dc8fc74d9adf25f83be6",
+    "3d649535d7270a74c8c62a32a6d648c8410bb0b08f3c8ba1058e5c21ab79e3cd",
+    "c7956260f056b2f231d4c06deb70ccc67dc377171acf23d5fc99f88e02fc9f37",
+    "70880eabdb484d3d9e8244ace8350d4a07e6bb0e2470844dba9b2f33e5b4270d",
+    "7e73e75a4157175f8c4c63d91d0aea7d44d09bba2044c1db202d79124b98f198",
+    "818d895337c1543082b080732296ef7efeff1a31356a61f1ff9b04ee1f1b765e"
+  ]
+}
