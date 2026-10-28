@@ -35,6 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
     { label: 'Home', href: '#hero' },
     { label: 'About Us', href: '#about' },
     { label: 'Services', href: '#services' },
+    { label: 'Interior Design', href: '#interior-design' },
     { label: 'Projects', href: '#projects' },
     { label: 'Our Process', href: '#process' },
     { label: 'Why Choose Us', href: '#why-us' },

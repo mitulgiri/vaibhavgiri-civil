@@ -36,7 +36,7 @@ interface ServiceItem {
 interface ProjectItem {
   id: string;
   title: string;
-  category: 'residential' | 'commercial' | 'industrial' | 'educational' | 'healthcare' | 'bungalows';
+  category: 'residential' | 'commercial' | 'industrial' | 'educational' | 'healthcare' | 'bungalows' | 'interior';
   sectorName: string;
   description: string;
   features: string[];
@@ -126,6 +126,22 @@ const DEFAULT_DATA: DatabaseSchema = {
       featured: true
     },
     {
+      id: 'interior-design-turnkey',
+      title: 'Interior Design & Turnkey Fit-Outs',
+      description: 'Contemporary architectural interior design blending trendsetting aesthetics with civil engineering precision and complete turnkey execution.',
+      points: [
+        '3D photorealistic visualization & conceptual spatial layout',
+        'Luxury residential interiors: Modular kitchens, living lounges, master suites & designer wardrobes',
+        'Commercial & corporate fit-outs: Ergonomic office layouts, executive chambers & retail boutiques',
+        'Turnkey execution: False ceilings, ambient cove lighting, custom woodwork, premium flooring & MEP integration',
+        'Zero subcontractor hassle: Single-point accountability with transparent BOQ billing'
+      ],
+      category: 'Interior Design',
+      iconName: 'Sparkles',
+      order: 3,
+      featured: true
+    },
+    {
       id: 'construction-services',
       title: 'Construction Services',
       description: 'End-to-end building execution delivering durable, aesthetically sound, and high-performance civil structures.',
@@ -137,7 +153,7 @@ const DEFAULT_DATA: DatabaseSchema = {
       ],
       category: 'Construction',
       iconName: 'Hammer',
-      order: 3,
+      order: 4,
       featured: true
     },
     {
@@ -227,6 +243,16 @@ const DEFAULT_DATA: DatabaseSchema = {
       description: 'Structural coordination, RCC framework supervision, and turnkey execution management for modern residential architecture.',
       features: ['Earthquake-resistant RCC design coordination', 'Vastu-compliant spatial planning', 'Engineered thermal insulation & waterproofing'],
       imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+      isSample: true
+    },
+    {
+      id: 'proj-int-1',
+      title: 'Bespoke Luxury Residential & Commercial Turnkey Interior',
+      category: 'interior',
+      sectorName: 'Interior Design & Fit-Outs',
+      description: 'Trending contemporary interior transformation featuring ambient cove lighting, custom modular woodwork, Italian marble flooring, and acoustic false ceilings.',
+      features: ['3D Photorealistic VR walkthroughs', 'Bespoke modular kitchen & wardrobes', 'Integrated smart MEP & designer lighting'],
+      imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
       isSample: true
     },
     {

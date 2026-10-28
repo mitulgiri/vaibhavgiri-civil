@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { AboutUs } from './components/AboutUs';
 import { ServicesSection } from './components/ServicesSection';
+import { InteriorDesignShowcase } from './components/InteriorDesignShowcase';
 import { ProjectsSection } from './components/ProjectsSection';
 import { WorkProcess } from './components/WorkProcess';
 import { WhyChooseUs } from './components/WhyChooseUs';
@@ -96,13 +97,19 @@ export default function App() {
           onOpenAdmin={() => setIsAdminOpen(true)}
         />
 
-        {/* C. Our Services (8 Core Civil Engineering Services) */}
+        {/* C. Our Services (Core Civil Engineering Services) */}
         <ServicesSection
           services={services}
           onSelectServiceForInquiry={handleSelectServiceForInquiry}
         />
 
-        {/* D. Projects We Serve (Project Sectors & Gallery) */}
+        {/* D. Trending Specialty: Architectural Interior Design & Turnkey Fit-Outs */}
+        <InteriorDesignShowcase
+          company={company}
+          onSelectServiceForInquiry={handleSelectServiceForInquiry}
+        />
+
+        {/* E. Projects We Serve (Project Sectors & Gallery) */}
         <ProjectsSection
           projects={projects}
           onSelectServiceForInquiry={handleSelectServiceForInquiry}

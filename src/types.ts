@@ -16,12 +16,13 @@ export type ProjectCategory =
   | 'industrial' 
   | 'educational' 
   | 'healthcare' 
-  | 'bungalows';
+  | 'bungalows'
+  | 'interior';
 
 export interface ProjectItem {
   id: string;
   title: string;
-  category: 'residential' | 'commercial' | 'industrial' | 'educational' | 'healthcare' | 'bungalows';
+  category: 'residential' | 'commercial' | 'industrial' | 'educational' | 'healthcare' | 'bungalows' | 'interior';
   sectorName: string;
   description: string;
   features: string[];

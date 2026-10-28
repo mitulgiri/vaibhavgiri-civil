@@ -9,7 +9,10 @@ import {
   Calculator, 
   ShieldCheck,
   ArrowRight,
-  HardHat
+  HardHat,
+  Sparkles,
+  Palette,
+  Sofa
 } from 'lucide-react';
 import { ServiceItem } from '../types';
 
@@ -28,7 +31,10 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Wrench,
   Calculator,
   ShieldCheck,
-  HardHat
+  HardHat,
+  Sparkles,
+  Palette,
+  Sofa
 };
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({

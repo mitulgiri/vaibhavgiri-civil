@@ -9,6 +9,7 @@ interface ProjectsSectionProps {
 
 const CATEGORIES: { id: ProjectCategory; label: string }[] = [
   { id: 'all', label: 'All Sectors' },
+  { id: 'interior', label: 'Interior Fit-Outs' },
   { id: 'residential', label: 'Residential' },
   { id: 'commercial', label: 'Commercial' },
   { id: 'industrial', label: 'Industrial' },

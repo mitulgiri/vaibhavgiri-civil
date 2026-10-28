@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, ArrowRight, CheckCircle, ShieldCheck, Compass, Ruler, Building, Layout } from 'lucide-react';
+import { Phone, ArrowRight, CheckCircle, ShieldCheck, Compass, Ruler, Building, Layout, Sparkles } from 'lucide-react';
 import { CompanyInfo } from '../types';
 
 interface HeroProps {
@@ -95,7 +95,7 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
 
             {/* Quality & Transparency Guarantees (Clean unboxed metadata) */}
-            <div className="pt-6 border-t border-slate-700/60 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+            <div className="pt-6 border-t border-slate-700/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>Strict Structural Standards</span>
@@ -103,6 +103,10 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>Transparent BOQ & Billing</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>Bespoke Interior Design</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-slate-400 shrink-0" />
@@ -157,6 +161,19 @@ export const Hero: React.FC<HeroProps> = ({
                     <span className="font-semibold block text-white">Site Supervision Protocol</span>
                     <span className="text-slate-300">
                       RCC casting & curing, masonry & plastering, tile work, waterproofing & finishing inspection
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <Sparkles className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="font-semibold block text-white flex items-center gap-1.5">
+                      <span>Interior Design & Fit-Outs</span>
+                      <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.2 bg-amber-400/20 text-amber-300 rounded font-bold">Trending</span>
+                    </span>
+                    <span className="text-slate-300">
+                      3D spatial visualization, luxury modular kitchens & turnkey interior execution
                     </span>
                   </div>
                 </div>
