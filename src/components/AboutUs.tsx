@@ -48,7 +48,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ company, onOpenAdmin }) => {
                   <CheckCircle2 className="w-4 h-4 text-[#172544]" />
                   <span>Verified Corporate Details</span>
                 </div>
-                <div>Principal: {company?.founder || 'Vaibhavgiri Goswami'}</div>
+                <div>Principal Consulting Engineer: {company?.founder || 'Vaibhavgiri Goswami'}</div>
                 <div>Domain: Civil Engineering Consultancy, Supervision & Contracting</div>
                 <div>Direct Consultation Helpline: {company?.phone || '+91 9427409949'}</div>
               </div>

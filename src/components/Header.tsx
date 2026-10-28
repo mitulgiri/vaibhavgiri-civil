@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
             <span className="text-slate-400 hidden sm:inline">|</span>
             <span className="text-slate-300 hidden md:inline">
-              Structural Planning · Site Supervision · Turnkey Execution
+              Planning · Structural Design · Site Supervision · Interior Design · Turnkey Execution
             </span>
           </div>
 
@@ -99,59 +99,38 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={(e) => handleNavClick(e, '#hero')}
             className="flex items-center gap-3.5 group cursor-pointer"
           >
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white p-1 rounded-sm border border-slate-200 flex-shrink-0 flex items-center justify-center overflow-hidden shadow-xs">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 flex items-center justify-center">
               <img
-                src="/assets/aistudio/IMG-20261024-WA0009_0616dd03.jpg"
+                src="/assets/aistudio/output-onlinepngtools_5df256ce.png"
                 alt="Vaibhavgiri Goswami & Associates Logo"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain filter drop-shadow-xs"
               />
             </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#172544] uppercase leading-none font-sans">
+            <div className="flex flex-col shrink-0">
+              <span className="font-extrabold text-base sm:text-lg tracking-wider text-[#172544] uppercase leading-none font-bank-gothic-lt whitespace-nowrap">
                 Vaibhavgiri Goswami
               </span>
-              <span className="text-[11px] sm:text-xs font-semibold text-[#77797C] tracking-widest uppercase mt-0.5">
+              <span className="text-[11px] sm:text-xs font-semibold text-[#77797C] tracking-widest uppercase mt-0.5 font-bank-gothic-lt whitespace-nowrap">
                 & Associates
               </span>
-              <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-medium tracking-wider mt-0.5 hidden xs:block">
+              <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-medium tracking-wider mt-0.5 hidden xs:block whitespace-nowrap">
                 Civil Engineering Consultants
               </span>
             </div>
           </a>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden lg:flex items-center gap-7">
+          {/* Desktop Navigation Links (Clean straight horizontal line, no word-wrapping) */}
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8 flex-nowrap shrink-0">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-sm font-medium text-slate-700 hover:text-[#172544] relative py-1 transition-colors hover:border-b-2 hover:border-[#172544]"
+                className="text-sm font-medium text-slate-700 hover:text-[#172544] relative py-1 transition-colors hover:border-b-2 hover:border-[#172544] whitespace-nowrap"
               >
                 {link.label}
               </a>
             ))}
-          </div>
-
-          {/* Right Action Buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#172544] bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition-colors"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-              <span>WhatsApp</span>
-            </a>
-
-            <a
-              href={`tel:${phone.replace(/\s+/g, '')}`}
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#172544] hover:bg-[#1f325d] rounded transition-colors shadow-xs"
-            >
-              <Phone className="w-3.5 h-3.5" />
-              <span>Call Now</span>
-            </a>
           </div>
 
           {/* Mobile Menu Toggle Button */}

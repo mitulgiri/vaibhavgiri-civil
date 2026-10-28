@@ -12,6 +12,10 @@
   }
 }
 
+.font-bank-gothic-lt {
+  font-family: 'BANK GOTHIC Lt BT', 'BankGothic Lt BT', 'Bank Gothic Lt BT', 'BankGothic', 'Bank Gothic', 'Michroma', sans-serif;
+}
+
 .architectural-grid {
   background-size: 48px 48px;
   background-image: 

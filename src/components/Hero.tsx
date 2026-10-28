@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, ArrowRight, CheckCircle, ShieldCheck, Compass, Ruler, Building } from 'lucide-react';
+import { Phone, ArrowRight, CheckCircle, ShieldCheck, Compass, Ruler, Building, Layout } from 'lucide-react';
 import { CompanyInfo } from '../types';
 
 interface HeroProps {
@@ -119,7 +119,13 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="absolute bottom-0 left-0 transform -translate-x-2 translate-y-2 w-16 h-16 border-b-2 border-l-2 border-slate-400 opacity-60 pointer-events-none" />
               
               <div className="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
-                <Building className="w-6 h-6 text-slate-300" />
+                <div className="w-9 h-9 p-0.5 bg-white/90 rounded shrink-0 flex items-center justify-center shadow-xs">
+                  <img
+                    src="/assets/aistudio/output-onlinepngtools_5df256ce.png"
+                    alt="VGA Emblem"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
                 <div>
                   <h2 className="text-sm font-bold text-white uppercase tracking-wider">
                     Engineering Consultation
@@ -129,6 +135,14 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
 
               <div className="space-y-3.5 text-xs text-slate-200">
+                <div className="flex items-start gap-2.5">
+                  <Layout className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="font-semibold block text-white">Planning</span>
+                    <span className="text-slate-300">Building layout, spatial planning & regulatory compliance</span>
+                  </div>
+                </div>
+
                 <div className="flex items-start gap-2.5">
                   <Ruler className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                   <div>
@@ -141,7 +155,9 @@ export const Hero: React.FC<HeroProps> = ({
                   <Compass className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                   <div>
                     <span className="font-semibold block text-white">Site Supervision Protocol</span>
-                    <span className="text-slate-300">Rigorous inspection at reinforcement, casting & curing stages</span>
+                    <span className="text-slate-300">
+                      RCC casting & curing, masonry & plastering, tile work, waterproofing & finishing inspection
+                    </span>
                   </div>
                 </div>
 
@@ -155,7 +171,7 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
-                <span>Principal: {company?.founder || 'Vaibhavgiri Goswami'}</span>
+                <span>Principal Consulting Engineer: {company?.founder || 'Vaibhavgiri Goswami'}</span>
                 <span className="text-slate-300 font-medium">India</span>
               </div>
             </div>

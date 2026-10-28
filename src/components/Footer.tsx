@@ -23,18 +23,18 @@ export const Footer: React.FC<FooterProps> = ({ company, onOpenAdmin }) => {
           {/* Brand Identity & Logo */}
           <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-white p-1 rounded-sm flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 bg-white/95 p-1 rounded flex items-center justify-center shrink-0 shadow-xs">
                 <img
-                  src="/assets/aistudio/IMG-20261024-WA0009_0616dd03.jpg"
+                  src="/assets/aistudio/output-onlinepngtools_5df256ce.png"
                   alt="Vaibhavgiri Goswami & Associates Logo"
                   className="w-full h-full object-contain"
                 />
               </div>
               <div>
-                <span className="font-extrabold text-base tracking-tight uppercase block leading-none text-white">
+                <span className="font-extrabold text-base tracking-wider uppercase block leading-none text-white font-bank-gothic-lt">
                   Vaibhavgiri Goswami
                 </span>
-                <span className="text-xs font-semibold text-slate-300 tracking-widest uppercase block mt-0.5">
+                <span className="text-xs font-semibold text-slate-300 tracking-widest uppercase block mt-0.5 font-bank-gothic-lt">
                   & Associates
                 </span>
                 <span className="text-[10px] text-slate-400 uppercase tracking-wider block mt-0.5 font-medium">

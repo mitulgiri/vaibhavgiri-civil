@@ -174,16 +174,25 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             {/* Identity Card */}
             <div className="bg-[#172544] text-white p-8 rounded shadow-lg relative overflow-hidden">
               <div className="relative z-10 space-y-4">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-slate-300 font-semibold block mb-1">
-                    Civil Engineering Consultants
-                  </span>
-                  <h3 className="text-2xl font-bold text-white uppercase font-sans">
-                    {company?.businessName || 'Vaibhavgiri Goswami & Associates'}
-                  </h3>
-                  <p className="text-xs text-slate-300 mt-1">
-                    Technical Leadership: {company?.founder || 'Vaibhavgiri Goswami'}
-                  </p>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <span className="text-xs uppercase tracking-widest text-slate-300 font-semibold block mb-1">
+                      Civil Engineering Consultants
+                    </span>
+                    <h3 className="text-2xl font-bold text-white uppercase font-sans">
+                      {company?.businessName || 'Vaibhavgiri Goswami & Associates'}
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Technical Leadership: {company?.founder || 'Vaibhavgiri Goswami'}
+                    </p>
+                  </div>
+                  <div className="w-12 h-12 p-1 bg-white/95 rounded shrink-0 shadow-xs flex items-center justify-center">
+                    <img
+                      src="/assets/aistudio/output-onlinepngtools_5df256ce.png"
+                      alt="VGA Emblem"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                 </div>
 
                 {/* Direct Call Button (Click to Call) */}
