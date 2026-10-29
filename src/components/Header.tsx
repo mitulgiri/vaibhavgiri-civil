@@ -98,23 +98,23 @@ export const Header: React.FC<HeaderProps> = ({
           <a
             href="#hero"
             onClick={(e) => handleNavClick(e, '#hero')}
-            className="flex items-center gap-2.5 sm:gap-3.5 group cursor-pointer min-w-0"
+            className="flex items-center gap-2 sm:gap-3.5 group cursor-pointer min-w-0"
           >
-            <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 shrink-0 flex items-center justify-center">
+            <div className="w-9 h-9 xs:w-11 xs:h-11 sm:w-14 sm:h-14 shrink-0 flex items-center justify-center">
               <img
                 src="/assets/aistudio/output-onlinepngtools_5df256ce.png"
                 alt="Vaibhavgiri Goswami & Associates Logo"
                 className="w-full h-full object-contain filter drop-shadow-xs"
               />
             </div>
-            <div className="flex flex-col shrink-0 min-w-0">
-              <span className="font-extrabold text-sm xs:text-base sm:text-lg tracking-wider text-[#172544] uppercase leading-none font-bank-gothic-lt whitespace-nowrap">
+            <div className="flex flex-col min-w-0">
+              <span className="font-extrabold text-[12px] min-[360px]:text-[13px] min-[400px]:text-sm sm:text-base lg:text-lg tracking-normal min-[380px]:tracking-wider text-[#172544] uppercase leading-tight font-bank-gothic-lt whitespace-nowrap">
                 Vaibhavgiri Goswami
               </span>
-              <span className="text-[10px] xs:text-[11px] sm:text-xs font-semibold text-[#77797C] tracking-widest uppercase mt-0.5 font-bank-gothic-lt whitespace-nowrap">
+              <span className="text-[9px] min-[360px]:text-[10px] sm:text-xs font-semibold text-[#77797C] tracking-widest uppercase mt-0.5 font-bank-gothic-lt whitespace-nowrap">
                 & Associates
               </span>
-              <span className="text-[8px] xs:text-[9px] sm:text-[10px] text-slate-500 uppercase font-medium tracking-wider mt-0.5 hidden xs:block whitespace-nowrap">
+              <span className="text-[8px] xs:text-[9px] sm:text-[10px] text-slate-500 uppercase font-medium tracking-wider mt-0.5 hidden sm:block whitespace-nowrap">
                 Civil Engineering Consultants
               </span>
             </div>
@@ -134,16 +134,8 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
           </div>
 
-          {/* Mobile Menu & Quick Phone Button (Tablet & Mobile) */}
-          <div className="flex items-center gap-1.5 xs:gap-2 lg:hidden shrink-0">
-            <a
-              href={`tel:${phone.replace(/\s+/g, '')}`}
-              className="w-10 h-10 flex items-center justify-center text-[#172544] bg-slate-100 hover:bg-slate-200 rounded transition-colors"
-              aria-label="Call direct phone"
-            >
-              <Phone className="w-4 h-4" />
-            </a>
-
+          {/* Mobile Menu Toggle Button (Clean single button on right, preventing overlap on brand name) */}
+          <div className="flex items-center lg:hidden shrink-0">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="w-10 h-10 flex items-center justify-center text-slate-700 hover:text-[#172544] rounded hover:bg-slate-100 transition-colors focus:outline-hidden cursor-pointer"
