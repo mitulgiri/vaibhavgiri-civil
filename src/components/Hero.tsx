@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="pt-6 border-t border-slate-700/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-slate-400 shrink-0" />
-                <span>Strict Structural Standards</span>
+                <span>Strict Engineering Standards</span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
