@@ -89,7 +89,7 @@ const DEFAULT_DATA: DatabaseSchema = {
     founder: 'Vaibhavgiri Goswami',
     phone: '+91 9427409949',
     whatsapp: '+91 9427409949',
-    email: 'contact@vaibhavgirigoswami.com',
+    email: 'vaibhavgirigoswami@gmail.com',
     address: 'Office address to be confirmed. (Serving regional & municipal development projects)',
     workingHours: 'Monday – Saturday: 9:30 AM to 7:00 PM (IST)',
     consultationFeeNotice: 'Preliminary technical discussions and initial requirement briefings are scheduled by appointment.',

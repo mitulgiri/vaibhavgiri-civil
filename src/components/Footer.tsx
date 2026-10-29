@@ -134,7 +134,7 @@ export const Footer: React.FC<FooterProps> = ({ company, onOpenAdmin }) => {
             </ul>
 
             <div className="pt-3 border-t border-slate-700/60 text-[11px] text-slate-400">
-              <p>Email: {company?.email || 'contact@vaibhavgirigoswami.com'}</p>
+              <p>Email: {company?.email || 'vaibhavgirigoswami@gmail.com'}</p>
               <p className="mt-1">Hours: {company?.workingHours || 'Mon – Sat: 9:30 AM to 7:00 PM'}</p>
             </div>
           </div>

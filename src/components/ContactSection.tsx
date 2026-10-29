@@ -249,7 +249,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span>{company?.email || 'contact@vaibhavgirigoswami.com'}</span>
+                    <span>{company?.email || 'vaibhavgirigoswami@gmail.com'}</span>
                   </div>
                 </div>
 
