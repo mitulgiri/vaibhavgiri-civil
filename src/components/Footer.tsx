@@ -30,14 +30,14 @@ export const Footer: React.FC<FooterProps> = ({ company, onOpenAdmin }) => {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div>
-                <span className="font-extrabold text-base tracking-wider uppercase block leading-none text-white font-bank-gothic-lt">
+              <div className="min-w-0">
+                <span className="font-extrabold text-[13px] sm:text-base tracking-normal sm:tracking-wider uppercase block leading-tight text-white font-bank-gothic-lt whitespace-nowrap">
                   Vaibhavgiri Goswami
                 </span>
-                <span className="text-xs font-semibold text-slate-300 tracking-widest uppercase block mt-0.5 font-bank-gothic-lt">
+                <span className="text-[10px] sm:text-xs font-semibold text-slate-300 tracking-widest uppercase block mt-0.5 font-bank-gothic-lt whitespace-nowrap">
                   & Associates
                 </span>
-                <span className="text-[10px] text-slate-400 uppercase tracking-wider block mt-0.5 font-medium">
+                <span className="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block mt-0.5 font-medium whitespace-nowrap">
                   Civil Engineering Consultants
                 </span>
               </div>

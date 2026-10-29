@@ -20,7 +20,8 @@ import {
   Loader2, 
   RefreshCw,
   X,
-  ExternalLink
+  ExternalLink,
+  Info
 } from 'lucide-react';
 import { CompanyInfo, InquiryItem, ProjectItem, ServiceItem, SystemStatus } from '../types';
 import { 
@@ -450,6 +451,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             {/* Main Tab Panel Area */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50/50">
               
+              {/* Vercel Client Mode Alert */}
+              {localStorage.getItem('vga_client_fallback_mode') === 'true' && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-300 rounded text-amber-900 text-xs flex items-start gap-2">
+                  <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+                  <span>
+                    <strong>Vercel Deployment Notice:</strong> Running in client-side administrative mode. Customer inquiries and company updates are preserved in browser storage. With the new <code>vercel.json</code> and <code>api/index.ts</code> deployed to your Vercel project, cloud database sync activates automatically.
+                  </span>
+                </div>
+              )}
+
               {/* Toast Messages */}
               {actionSuccess && (
                 <div className="mb-4 p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded text-xs flex items-center gap-2 animate-in fade-in">
