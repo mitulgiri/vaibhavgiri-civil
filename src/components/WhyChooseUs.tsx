@@ -54,15 +54,15 @@ export const WhyChooseUs: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14">
+        <div className="max-w-3xl mb-10 sm:mb-14">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#77797C] mb-2">
             <span className="w-6 h-[2px] bg-[#172544] inline-block"></span>
             <span>Integrity & Standards</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
             Why Choose Vaibhavgiri Goswami & Associates
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600 leading-relaxed">
             Our reputation is built upon clear engineering commitments, open communication, and diligent on-site verification. Here is what you can rely on when partnering with us:
           </p>
         </div>

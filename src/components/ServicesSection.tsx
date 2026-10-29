@@ -46,21 +46,21 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-16">
+        <div className="max-w-3xl mb-10 sm:mb-16">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#77797C] mb-2">
             <span className="w-6 h-[2px] bg-[#172544] inline-block"></span>
             <span>Comprehensive Engineering Portfolio</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
             Our Civil Engineering & Construction Services
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600 leading-relaxed">
             From technical structural design coordination and independent site supervision to full turnkey building execution and billing verification, we deliver disciplined engineering across every construction phase.
           </p>
         </div>
 
-        {/* 8 Service Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Responsive Service Cards Grid (1 col on mobile, 2 on tablet, 3 on laptop, 4 on wide PC) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
           {services.map((service, index) => {
             const IconComponent = ICON_MAP[service.iconName] || Building2;
             

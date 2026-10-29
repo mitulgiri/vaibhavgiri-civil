@@ -84,6 +84,9 @@ export const Footer: React.FC<FooterProps> = ({ company, onOpenAdmin }) => {
                 <a href="#services" className="hover:text-white transition-colors">Civil Engineering Services</a>
               </li>
               <li>
+                <a href="#interior-design" className="hover:text-white transition-colors text-amber-300 font-medium">Architectural Interior Design</a>
+              </li>
+              <li>
                 <a href="#projects" className="hover:text-white transition-colors">Project Sectors We Serve</a>
               </li>
               <li>

@@ -14,22 +14,22 @@ export const QuickFloatActions: React.FC<QuickFloatActionsProps> = ({ company })
   )}`;
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 flex flex-col gap-2.5 sm:hidden">
+    <div className="fixed bottom-5 right-5 z-40 flex flex-col gap-3 lg:hidden">
       {/* WhatsApp Quick Floating Button */}
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+        className="w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-xl active:scale-95 transition-all border border-white/20"
         aria-label="Direct WhatsApp Chat"
       >
-        <MessageSquare className="w-6 h-6" />
+        <MessageSquare className="w-5 h-5" />
       </a>
 
       {/* Phone Call Floating Button */}
       <a
         href={`tel:${cleanPhone}`}
-        className="w-12 h-12 rounded-full bg-[#172544] hover:bg-[#203460] text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+        className="w-12 h-12 rounded-full bg-[#172544] hover:bg-[#203460] text-white flex items-center justify-center shadow-xl active:scale-95 transition-all border border-white/20"
         aria-label="Call Direct Mobile"
       >
         <Phone className="w-5 h-5" />

@@ -379,8 +379,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           /* Authenticated Dashboard */
           <div className="flex-1 flex flex-col md:flex-row overflow-hidden bg-white">
             
-            {/* Sidebar Navigation */}
-            <div className="w-full md:w-56 bg-slate-50 border-r border-slate-200 p-3 flex md:flex-col gap-1 overflow-x-auto shrink-0">
+            {/* Sidebar Navigation (Swipeable horizontal tabs on mobile, vertical on desktop) */}
+            <div className="w-full md:w-56 bg-slate-50 border-b md:border-b-0 md:border-r border-slate-200 p-2 sm:p-3 flex md:flex-col gap-1 overflow-x-auto shrink-0 scrollbar-none">
               <button
                 onClick={() => setActiveTab('inquiries')}
                 className={`flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded text-left transition-colors whitespace-nowrap cursor-pointer ${

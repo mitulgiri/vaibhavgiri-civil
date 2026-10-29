@@ -153,26 +153,26 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14">
+        <div className="max-w-3xl mb-10 sm:mb-14">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#77797C] mb-2">
             <span className="w-6 h-[2px] bg-[#172544] inline-block"></span>
             <span>Connect with Engineering Leadership</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
             Request a Consultation
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600 leading-relaxed">
             Discuss your upcoming project, structural advisory needs, BOQ verification, or turnkey contracting. Connect directly by phone, WhatsApp, or submit your specifications below.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           
           {/* Left Column: Verified Contact Information & Direct Channels */}
           <div className="lg:col-span-5 space-y-6">
             
             {/* Identity Card */}
-            <div className="bg-[#172544] text-white p-8 rounded shadow-lg relative overflow-hidden">
+            <div className="bg-[#172544] text-white p-6 sm:p-8 rounded shadow-lg relative overflow-hidden">
               <div className="relative z-10 space-y-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>

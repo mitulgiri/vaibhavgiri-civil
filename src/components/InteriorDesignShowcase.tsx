@@ -139,19 +139,19 @@ export const InteriorDesignShowcase: React.FC<InteriorDesignShowcaseProps> = ({
               <span>Trending Specialty · Architectural Interiors</span>
             </div>
             
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
               Architectural Interior Design & Turnkey Fit-Outs
             </h2>
             
-            <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed">
               Where high-end contemporary aesthetics meet civil engineering precision. Experience 3D photorealistic visualization, seamless spatial ergonomics, and single-point turnkey execution with zero contractor coordination hassle.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-3 w-full lg:w-auto">
             <button
               onClick={handleConsultClick}
-              className="inline-flex items-center gap-2 px-6 py-3.5 bg-white text-[#172544] hover:bg-slate-100 font-bold text-sm rounded transition-all shadow-lg hover:shadow-xl cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 bg-white text-[#172544] hover:bg-slate-100 font-bold text-sm rounded transition-all shadow-lg hover:shadow-xl cursor-pointer w-full xs:w-auto"
             >
               <span>Book Interior Consultation</span>
               <ArrowRight className="w-4 h-4 text-[#172544]" />
@@ -160,7 +160,7 @@ export const InteriorDesignShowcase: React.FC<InteriorDesignShowcaseProps> = ({
               href={interiorWhatsAppUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded transition-colors shadow-md"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded transition-colors shadow-md w-full xs:w-auto"
             >
               <MessageSquare className="w-4 h-4 text-white" />
               <span>WhatsApp Chat</span>
@@ -239,9 +239,9 @@ export const InteriorDesignShowcase: React.FC<InteriorDesignShowcaseProps> = ({
                     Material & Engineering Standards
                   </h4>
                   {activeSpace.specs.map((spec, idx) => (
-                    <div key={idx} className="flex justify-between items-center py-1 border-b border-slate-700/40 text-[11px]">
+                    <div key={idx} className="flex flex-col xs:flex-row xs:justify-between xs:items-center py-1.5 border-b border-slate-700/40 text-[11px] gap-0.5">
                       <span className="text-slate-400">{spec.label}</span>
-                      <span className="font-semibold text-slate-200 text-right">{spec.value}</span>
+                      <span className="font-semibold text-slate-200 text-left xs:text-right">{spec.value}</span>
                     </div>
                   ))}
                 </div>

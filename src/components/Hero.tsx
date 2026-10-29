@@ -30,22 +30,22 @@ export const Hero: React.FC<HeroProps> = ({
       </div>
 
       {/* Hero Content Container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-20 sm:pb-28">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 xs:pt-14 sm:pt-20 md:pt-24 pb-16 sm:pb-24 lg:pb-28">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Headlines & Call to Actions */}
-          <div className="lg:col-span-8 space-y-6">
+          <div className="lg:col-span-7 xl:col-span-8 space-y-5 sm:space-y-6">
             
             {/* Engineering Sub-Header / Sector Indicator (Zero-Pill clean typography) */}
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-widest uppercase text-slate-300">
-              <span className="w-8 h-[2px] bg-slate-400 inline-block"></span>
-              <span>Vaibhavgiri Goswami & Associates</span>
-              <span aria-hidden="true">·</span>
+            <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-semibold tracking-wider sm:tracking-widest uppercase text-slate-300">
+              <span className="w-6 sm:w-8 h-[2px] bg-slate-400 inline-block shrink-0"></span>
+              <span className="text-white font-medium">Vaibhavgiri Goswami & Associates</span>
+              <span aria-hidden="true" className="hidden xs:inline">·</span>
               <span className="text-slate-300 font-normal">Civil Engineering Consultants</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight font-sans">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight font-sans">
               Building Your Vision with <br className="hidden sm:inline" />
               <span className="text-slate-200 underline decoration-slate-500 decoration-2 underline-offset-8">
                 Engineering Excellence.
@@ -53,16 +53,16 @@ export const Hero: React.FC<HeroProps> = ({
             </h1>
 
             {/* Supporting Text */}
-            <p className="text-base sm:text-xl text-slate-300 max-w-2xl font-normal leading-relaxed">
+            <p className="text-sm xs:text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl font-normal leading-relaxed">
               Reliable Civil Engineering Consultancy, Construction, and Project Management Solutions.
               Precision structural coordination, meticulous site supervision, and turnkey delivery.
             </p>
 
             {/* Action Buttons Row */}
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-2 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-3 sm:gap-4">
               <button
                 onClick={onRequestConsultation}
-                className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-white text-[#172544] hover:bg-slate-100 font-bold text-sm rounded shadow-lg transition-all transform active:scale-98 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2.5 px-5 sm:px-6 py-3.5 bg-white text-[#172544] hover:bg-slate-100 font-bold text-sm rounded shadow-lg transition-all transform active:scale-98 cursor-pointer w-full xs:w-auto"
               >
                 <span>Request a Consultation</span>
                 <ArrowRight className="w-4 h-4 text-[#172544]" />
@@ -70,7 +70,7 @@ export const Hero: React.FC<HeroProps> = ({
 
               <button
                 onClick={onExploreServices}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-transparent hover:bg-white/10 text-white font-semibold text-sm rounded border border-slate-400 hover:border-white transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 bg-transparent hover:bg-white/10 text-white font-semibold text-sm rounded border border-slate-400 hover:border-white transition-all cursor-pointer w-full xs:w-auto"
               >
                 <span>Explore Our Services</span>
               </button>
@@ -78,14 +78,14 @@ export const Hero: React.FC<HeroProps> = ({
               {/* Prominent Call Now button linking directly to +91 9427409949 */}
               <a
                 href={`tel:${cleanPhone}`}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-slate-800/90 hover:bg-slate-800 text-white font-semibold text-sm rounded border border-slate-600 transition-all shadow-md group"
+                className="inline-flex items-center justify-center gap-2.5 px-4 sm:px-5 py-3 bg-slate-800/90 hover:bg-slate-800 text-white font-semibold text-sm rounded border border-slate-600 transition-all shadow-md group w-full xs:w-auto"
               >
-                <div className="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div className="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
                   <Phone className="w-3.5 h-3.5 text-white" />
                 </div>
                 <div className="text-left">
                   <span className="block text-[10px] text-slate-400 uppercase tracking-wider font-medium leading-none">
-                    Direct Engineering Helpline
+                    Direct Helpline
                   </span>
                   <span className="block text-xs sm:text-sm font-bold text-white mt-0.5">
                     {phone}
@@ -94,8 +94,8 @@ export const Hero: React.FC<HeroProps> = ({
               </a>
             </div>
 
-            {/* Quality & Transparency Guarantees (Clean unboxed metadata) */}
-            <div className="pt-6 border-t border-slate-700/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-slate-300">
+            {/* Quality & Transparency Guarantees (Clean responsive grid) */}
+            <div className="pt-5 sm:pt-6 border-t border-slate-700/60 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>Strict Engineering Standards</span>
@@ -116,9 +116,9 @@ export const Hero: React.FC<HeroProps> = ({
 
           </div>
 
-          {/* Right Column: Architectural Schematic Card */}
-          <div className="lg:col-span-4 hidden lg:block">
-            <div className="bg-white/10 backdrop-blur-xs border border-white/15 p-6 rounded shadow-2xl relative">
+          {/* Right Column: Architectural Schematic Card (Responsive on Tablet and Desktop) */}
+          <div className="lg:col-span-5 xl:col-span-4 mt-6 lg:mt-0">
+            <div className="bg-white/10 backdrop-blur-xs border border-white/15 p-5 sm:p-6 rounded-lg shadow-2xl relative">
               <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-2 w-16 h-16 border-t-2 border-r-2 border-slate-400 opacity-60 pointer-events-none" />
               <div className="absolute bottom-0 left-0 transform -translate-x-2 translate-y-2 w-16 h-16 border-b-2 border-l-2 border-slate-400 opacity-60 pointer-events-none" />
               

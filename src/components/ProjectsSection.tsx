@@ -34,36 +34,36 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-12">
+        <div className="max-w-3xl mb-8 sm:mb-12">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#77797C] mb-2">
             <span className="w-6 h-[2px] bg-[#172544] inline-block"></span>
             <span>Project Typologies & Sector Expertise</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
             Project Sectors We Serve
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600 leading-relaxed">
             From precision residential structures and sprawling commercial complexes to heavy industrial facilities, our civil engineering consultations adapt to structural loads, municipal guidelines, and execution scale.
           </p>
         </div>
 
         {/* Ethical Sample Imagery Transparency Notice */}
-        <div className="mb-8 p-3.5 bg-white border border-slate-200 rounded flex items-center gap-3 text-xs text-slate-600 shadow-2xs">
-          <Info className="w-4 h-4 text-slate-500 shrink-0" />
-          <span>
+        <div className="mb-6 sm:mb-8 p-3 sm:p-3.5 bg-white border border-slate-200 rounded flex items-start sm:items-center gap-2.5 sm:gap-3 text-xs text-slate-600 shadow-2xs">
+          <Info className="w-4 h-4 text-slate-500 shrink-0 mt-0.5 sm:mt-0" />
+          <span className="leading-relaxed">
             <strong>Authenticity Commitment:</strong> To adhere strictly to truthful business disclosures, the photography below represents architectural typologies and engineering sectors served. Client-specific completed project photographs are released only with owner permission via our admin records.
           </span>
         </div>
 
-        {/* Category Filter Bar (Functional segmented buttons) */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-200/80 rounded mb-10 w-fit">
+        {/* Category Filter Bar (Smooth horizontal swipe on mobile, wrap on tablet/desktop) */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded mb-8 sm:mb-10 overflow-x-auto max-w-full scrollbar-none sm:flex-wrap">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-3.5 py-1.5 text-xs font-medium rounded transition-all cursor-pointer ${
+                className={`px-3 sm:px-3.5 py-1.5 text-xs font-medium rounded transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   isActive
                     ? 'bg-[#172544] text-white shadow-xs font-semibold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200'

@@ -13,25 +13,25 @@ export const AboutUs: React.FC<AboutUsProps> = ({ company, onOpenAdmin }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14">
+        <div className="max-w-3xl mb-10 sm:mb-14">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#77797C] mb-2">
             <span className="w-6 h-[2px] bg-[#172544] inline-block"></span>
             <span>Corporate Identity & Engineering Principles</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-[#172544] tracking-tight font-sans">
             About Vaibhavgiri Goswami & Associates
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600 leading-relaxed">
             A civil engineering consultancy and construction services practice dedicated to bridging architectural designs with structural integrity, site discipline, and transparent project delivery.
           </p>
         </div>
 
         {/* 2-Column Overview */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           
           {/* Left Column: Company Introduction & Verified Foundation */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="bg-white p-8 rounded border border-slate-200 shadow-xs">
+            <div className="bg-white p-5 sm:p-7 md:p-8 rounded border border-slate-200 shadow-xs">
               <h3 className="text-xl font-bold text-[#172544] mb-3">
                 Company Introduction
               </h3>
