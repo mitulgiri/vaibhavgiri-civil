@@ -252,6 +252,21 @@
   ],
   "inquiries": [
     {
+      "id": "inq-1793268569011-1qup",
+      "name": "Client Consultation Inquiry",
+      "mobile": "9427409949",
+      "email": "vaibhavgirigoswami@gmail.com",
+      "serviceId": "civil-engineering-consultancy",
+      "serviceName": "Civil Engineering Consultancy",
+      "projectType": "Residential / Commercial",
+      "location": "Gujarat",
+      "estimatedBudget": "To be discussed",
+      "description": "Customer inquiry submitted from public portal consultation request form.",
+      "status": "New",
+      "createdAt": "2026-10-29T10:17:39.331Z",
+      "ipAddress": "127.0.0.1"
+    },
+    {
       "id": "inq-mvp3e266-wfaw",
       "name": "Pre-Launch Verification Client",
       "mobile": "9427409949",

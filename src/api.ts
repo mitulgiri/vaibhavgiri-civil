@@ -67,15 +67,42 @@ export async function submitInquiry(payload: {
   honeypot?: string;
 }): Promise<{ success: boolean; message: string; inquiryId: string }> {
   try {
-    return await apiFetch<{ success: boolean; message: string; inquiryId: string }>('/api/inquiries', {
+    const res = await apiFetch<{ success: boolean; message: string; inquiryId: string }>('/api/inquiries', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+
+    // Also cache locally for instant availability and client redundancy
+    try {
+      const newInquiry: InquiryItem = {
+        id: res.inquiryId || `inq-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        name: payload.name.trim(),
+        mobile: payload.mobile.replace(/[^0-9]/g, ''),
+        email: payload.email?.trim() || '',
+        serviceId: payload.serviceId || 'general-inquiry',
+        serviceName: payload.serviceName || 'General Civil Consultation',
+        projectType: payload.projectType || 'Residential / Commercial',
+        location: payload.location?.trim() || 'Not Specified',
+        estimatedBudget: payload.estimatedBudget?.trim() || 'To be discussed',
+        description: payload.description.trim(),
+        status: 'New',
+        createdAt: new Date().toISOString()
+      };
+      const existing = localStorage.getItem('vga_local_inquiries');
+      const list = existing ? JSON.parse(existing) : [];
+      if (!list.some((i: any) => i.id === newInquiry.id)) {
+        list.unshift(newInquiry);
+        localStorage.setItem('vga_local_inquiries', JSON.stringify(list));
+      }
+    } catch {}
+
+    return res;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     if (message.includes('404')) {
+      const fallbackId = `inq-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
       const newInquiry: InquiryItem = {
-        id: `inq-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        id: fallbackId,
         name: payload.name.trim(),
         mobile: payload.mobile.replace(/[^0-9]/g, ''),
         email: payload.email?.trim() || '',
@@ -95,7 +122,7 @@ export async function submitInquiry(payload: {
       return {
         success: true,
         message: 'Thank you! Your civil engineering consultation request has been recorded. Our engineering team will review your requirements and reach out via phone/WhatsApp.',
-        inquiryId: newInquiry.id
+        inquiryId: fallbackId
       };
     }
     throw err;
@@ -179,20 +206,28 @@ export async function fetchAdminInquiries(): Promise<InquiryItem[]> {
         const localList: InquiryItem[] = JSON.parse(localStr);
         const existingIds = new Set(serverInquiries.map(i => i.id));
         const unmerged = localList.filter(i => !existingIds.has(i.id));
+        if (unmerged.length > 0) {
+          // Attempt background sync of unmerged inquiries to cloud database
+          unmerged.forEach(item => {
+            apiFetch('/api/inquiries', {
+              method: 'POST',
+              body: JSON.stringify(item),
+            }).catch(() => {});
+          });
+        }
         return [...unmerged, ...serverInquiries];
       } catch {}
     }
     return serverInquiries;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    if (message.includes('404') || localStorage.getItem('vga_client_fallback_mode') === 'true') {
-      const localStr = localStorage.getItem('vga_local_inquiries');
-      if (localStr) {
-        try { return JSON.parse(localStr); } catch {}
-      }
-      return [];
+    console.warn('[VGA API] fetchAdminInquiries notice:', err);
+    const localStr = localStorage.getItem('vga_local_inquiries');
+    if (localStr) {
+      try {
+        return JSON.parse(localStr);
+      } catch {}
     }
-    throw err;
+    return [];
   }
 }
 

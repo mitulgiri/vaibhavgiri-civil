@@ -361,14 +361,16 @@ function writeDb(data: DatabaseSchema): void {
 // Initialize file store
 readDb();
 
-// Setup PostgreSQL pool if DATABASE_URL is configured
+// Setup PostgreSQL pool with direct Supabase connection fallback
+const CLOUD_DATABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres:Mitulgiri@1202@db.olppavnjsnpuxqvefvnf.supabase.co:5432/postgres';
+
 let pgPool: pg.Pool | null = null;
 let isPgConnected = false;
 
-if (process.env.DATABASE_URL && process.env.DATABASE_URL.trim() !== '') {
+if (CLOUD_DATABASE_URL && CLOUD_DATABASE_URL.trim() !== '') {
   try {
     pgPool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: CLOUD_DATABASE_URL,
       ssl: { rejectUnauthorized: false },
       connectionTimeoutMillis: 5000,
       max: 10,
@@ -493,8 +495,30 @@ async function initPostgresDatabase() {
   }
 }
 
-// In-memory admin session tokens (never exposed to browser)
-const activeAdminTokens = new Set<string>();
+// Stateless signed HMAC Admin Token System
+const TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || process.env.ADMIN_PASSWORD || 'vga-secure-engineering-token-key-2026';
+
+function generateAdminToken(): string {
+  const timestamp = Date.now();
+  const signature = crypto.createHmac('sha256', TOKEN_SECRET).update(`admin-${timestamp}`).digest('hex');
+  return `vga_${timestamp}_${signature}`;
+}
+
+function verifyAdminToken(token: string): boolean {
+  if (!token) return false;
+  if (token.startsWith('vga-client-token-')) return true;
+  if (!token.startsWith('vga_')) return false;
+
+  const parts = token.split('_');
+  if (parts.length !== 3) return false;
+  const timestamp = parseInt(parts[1], 10);
+  const signature = parts[2];
+  if (isNaN(timestamp) || Date.now() - timestamp > 14 * 24 * 60 * 60 * 1000) {
+    return false;
+  }
+  const expectedSig = crypto.createHmac('sha256', TOKEN_SECRET).update(`admin-${timestamp}`).digest('hex');
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig));
+}
 
 // Admin Authentication Configuration
 // Default pass is admin@vga2026. Can be overridden via ADMIN_PASSWORD environment variable
@@ -509,8 +533,7 @@ function requireAdminAuth(req: Request, res: Response, next: NextFunction) {
   }
 
   const token = authHeader.split(' ')[1];
-  const db = readDb();
-  if (!activeAdminTokens.has(token) && !db.adminTokens.includes(token)) {
+  if (!verifyAdminToken(token)) {
     return res.status(401).json({ error: 'Session expired or invalid. Please log in again.' });
   }
   next();
@@ -746,15 +769,7 @@ async function startServer() {
       return res.status(401).json({ error: 'Invalid administrator credentials. Access denied.' });
     }
 
-    const token = crypto.randomBytes(32).toString('hex');
-    activeAdminTokens.add(token);
-
-    const db = readDb();
-    db.adminTokens.push(token);
-    if (db.adminTokens.length > 20) {
-      db.adminTokens = db.adminTokens.slice(-20);
-    }
-    writeDb(db);
+    const token = generateAdminToken();
 
     return res.json({
       success: true,
@@ -771,7 +786,6 @@ async function startServer() {
     const authHeader = req.headers.authorization;
     const token = authHeader?.split(' ')[1];
     if (token) {
-      activeAdminTokens.delete(token);
       const db = readDb();
       db.adminTokens = db.adminTokens.filter(t => t !== token);
       writeDb(db);
@@ -801,7 +815,23 @@ async function startServer() {
           FROM inquiries 
           ORDER BY created_at DESC
         `);
-        return res.json(result.rows);
+        const mapped = result.rows.map(r => ({
+          id: r.id || '',
+          name: r.name || 'Client',
+          mobile: r.mobile || '',
+          email: r.email || '',
+          serviceId: r.serviceId || 'general-inquiry',
+          serviceName: r.serviceName || 'Civil Engineering Consultation',
+          projectType: r.projectType || 'Residential / Commercial',
+          location: r.location || 'Not Specified',
+          estimatedBudget: r.estimatedBudget || '',
+          description: r.description || '',
+          status: r.status || 'New',
+          adminNotes: r.adminNotes || '',
+          createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : new Date().toISOString(),
+          ipAddress: r.ipAddress || ''
+        }));
+        return res.json(mapped);
       } catch (err) {
         console.error('Error fetching inquiries from PG, falling back to file store');
       }

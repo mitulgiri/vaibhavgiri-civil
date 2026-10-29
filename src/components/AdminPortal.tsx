@@ -38,7 +38,10 @@ import {
   createProject,
   updateProject,
   deleteProject,
-  fetchSystemStatus
+  fetchSystemStatus,
+  fetchServices,
+  fetchProjects,
+  fetchCompanyInfo
 } from '../api';
 
 interface AdminPortalProps {
@@ -115,20 +118,57 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     setDataLoading(true);
     setActionError(null);
     try {
-      const [inqs, srvs, projs, comp, status] = await Promise.all([
-        fetchAdminInquiries(),
-        fetch('/api/services').then((r) => r.json()),
-        fetch('/api/projects').then((r) => r.json()),
-        fetch('/api/company').then((r) => r.json()),
-        fetchSystemStatus(),
-      ]);
-      setInquiries(inqs);
-      setServices(srvs);
-      setProjects(projs);
-      setCompanyForm(comp);
-      setSystemStatus(status);
+      // 1. Fetch Inquiries first & reliably
+      try {
+        const inqs = await fetchAdminInquiries();
+        if (Array.isArray(inqs)) {
+          setInquiries(inqs);
+        }
+      } catch (inqErr: any) {
+        console.warn('[VGA Admin] Inquiries load notice:', inqErr);
+      }
+
+      // 2. Fetch Services
+      try {
+        const srvs = await fetchServices();
+        if (Array.isArray(srvs) && srvs.length > 0) {
+          setServices(srvs);
+        }
+      } catch (srvErr) {
+        console.warn('[VGA Admin] Services load notice:', srvErr);
+      }
+
+      // 3. Fetch Projects
+      try {
+        const projs = await fetchProjects();
+        if (Array.isArray(projs) && projs.length > 0) {
+          setProjects(projs);
+        }
+      } catch (projErr) {
+        console.warn('[VGA Admin] Projects load notice:', projErr);
+      }
+
+      // 4. Fetch Company
+      try {
+        const comp = await fetchCompanyInfo();
+        if (comp && comp.businessName) {
+          setCompanyForm(comp);
+        }
+      } catch (compErr) {
+        console.warn('[VGA Admin] Company load notice:', compErr);
+      }
+
+      // 5. System Status
+      try {
+        const status = await fetchSystemStatus();
+        if (status) {
+          setSystemStatus(status);
+        }
+      } catch (statusErr) {
+        console.warn('[VGA Admin] Status load notice:', statusErr);
+      }
     } catch (err: any) {
-      setActionError(err.message || 'Failed to fetch admin data.');
+      setActionError(err.message || 'Notice while loading backoffice records.');
     } finally {
       setDataLoading(false);
     }
@@ -259,16 +299,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     }
   };
 
-  // Filtered inquiries list
+  // Filtered inquiries list with null safety
   const filteredInquiries = inquiries.filter((inq) => {
     const matchesStatus = statusFilter === 'All' || inq.status === statusFilter;
-    const q = inquirySearch.toLowerCase();
+    const q = inquirySearch.toLowerCase().trim();
+    if (!q) return matchesStatus;
+    
     const matchesSearch =
-      inq.name.toLowerCase().includes(q) ||
-      inq.mobile.includes(q) ||
-      inq.location.toLowerCase().includes(q) ||
-      inq.serviceName.toLowerCase().includes(q) ||
-      inq.description.toLowerCase().includes(q);
+      (inq.name || '').toLowerCase().includes(q) ||
+      (inq.mobile || '').includes(q) ||
+      (inq.email || '').toLowerCase().includes(q) ||
+      (inq.location || '').toLowerCase().includes(q) ||
+      (inq.serviceName || '').toLowerCase().includes(q) ||
+      (inq.description || '').toLowerCase().includes(q) ||
+      (inq.id || '').toLowerCase().includes(q);
     return matchesStatus && matchesSearch;
   });
 
